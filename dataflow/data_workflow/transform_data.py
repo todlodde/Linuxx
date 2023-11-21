@@ -1,14 +1,18 @@
 import pandas as pd
 
-# Load the data
-data = pd.read_csv('data.csv', header=None, names=['Date', 'Value'])
+def transform_data(file_name):
+    data = pd.read_csv(file_name, header=None, names=['Date', 'Value'])
 
-# Process the data
-# Example: Remove rows with missing values
-data.dropna(inplace=True)
+    data.dropna(inplace=True) 
+    data['Date'] = pd.to_datetime(data['Date']).dt.strftime('%Y-%m-%d')  
 
-# Example: Convert date to a specific format
-data['Date'] = pd.to_datetime(data['Date']).dt.strftime('%Y-%m-%d')
+    transformed_file_name = f'transformed_{file_name}'
+    data.to_csv(transformed_file_name, index=False)
 
-# Save the transformed data
-data.to_csv('transformed_data.csv', index=False)
+datasets = ['data_10_year_treasury.csv', 'data_10_2_year_spread.csv', 
+            'data_10_3_month_spread.csv', 'data_baa_corporate_bond_yield.csv',
+            'data_10_year_minus_fed_funds_rate.csv', 'data_aaa_corporate_bond_yield.csv']
+
+for dataset in datasets:
+    transform_data(dataset)
+
